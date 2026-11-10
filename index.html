@@ -6,7 +6,19 @@
   <title>Pebble Coffee Co. | Fresh coffee, delivered</title>
   <meta name="description" content="Specialty coffee roasted this week and delivered in 3 days. Practice landing page for learning performance marketing.">
 
-  <!-- LESSON 19: paste the consent mode default snippet here, ABOVE the Tag Manager snippet. -->
+  <!-- LESSON 19: paste the consent mode default snippet here, ABOVE the Tag Manager snippet. --><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  var savedConsent = null;
+  try { savedConsent = localStorage.getItem('pm_consent'); } catch (e) {}
+  var consentState = savedConsent === 'granted' ? 'granted' : 'denied';
+  gtag('consent', 'default', {
+    ad_storage: consentState,
+    ad_user_data: consentState,
+    ad_personalization: consentState,
+    analytics_storage: consentState
+  });
+</script>
 
   <!-- LESSON 16: paste the Google Tag Manager <head> snippet here. -->
 <!-- Google Tag Manager -->
@@ -141,6 +153,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
   </script>
 
-  <!-- LESSON 19: paste the consent banner markup and script here, before </body>. -->
+  <!-- LESSON 19: paste the consent banner markup and script here, before </body>. --> <div id="consent-banner" style="display:none; position:fixed; left:16px; right:16px; bottom:16px; background:#2b211b; color:#fff; padding:16px; border-radius:12px; z-index:10;">
+  <p style="margin:0 0 12px;">This practice page uses cookies to measure visits. Do you accept?</p>
+  <button id="consent-accept" class="btn">Accept</button>
+  <button id="consent-decline" class="btn" style="background:#6b5d53;">Decline</button>
+</div>
+<script>
+  (function () {
+    var banner = document.getElementById('consent-banner');
+    function choose(state) {
+      try { localStorage.setItem('pm_consent', state); } catch (e) {}
+      gtag('consent', 'update', {
+        ad_storage: state,
+        ad_user_data: state,
+        ad_personalization: state,
+        analytics_storage: state
+      });
+      banner.style.display = 'none';
+    }
+    if (!savedConsent) { banner.style.display = 'block'; }
+    document.getElementById('consent-accept').onclick = function () { choose('granted'); };
+    document.getElementById('consent-decline').onclick = function () { choose('denied'); };
+  })();
+</script>
 </body>
 </html>
